@@ -5,12 +5,14 @@ from models.base_model import db
 from flask_login import LoginManager
 from flask_wtf import CSRFProtect
 from models.user import User
+from flask_jwt_extended import JWTManager
   
 web_dir = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'tutory_web')
 
 app = Flask('TUTORY', root_path=web_dir)
-CSRFProtect(app)
+csrf = CSRFProtect(app)
+jwt = JWTManager(app)
 
 if os.getenv('FLASK_ENV') == 'production':
     app.config.from_object("config.ProductionConfig")
