@@ -8,7 +8,7 @@ class Announcement(BaseModel):
     title = pw.CharField()
     post = pw.TextField()
 
-    def validate_edit(self):
-        authorize = User.get_or_none(User.roles == "staff")
-        if authorize:
-            return "staff":True
+    # def validate_edit(self):
+    #     authorize = User.get_or_none(User.roles == "staff")
+        # if authorize:
+            # return ({"valid":True})

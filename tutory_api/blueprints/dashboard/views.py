@@ -9,7 +9,7 @@ dashboard_api_blueprint = Blueprint('dashboard_api',
                              template_folder='templates')
 
 
-@dashboard_api_blueprint.route('/', methods=['GET'])
+@dashboard_api_blueprint.route('/<id>', methods=['GET'])
 @jwt_required
 def home():
     username = get_jwt_identity()
@@ -34,12 +34,13 @@ def new_announcement():
     # new_title = request.json.get("title")
     # new_post = request.json.get("post")
 
+    user = get_jwt_identity
     params = request.json
     new_announcements = Announcement(full_name=params.get("full_name"), title=params.get("title"),post=params.get("post"))
 
     if User.get_or_none(User.full_name == staff_name) and User.roles == "staff":
         if new_announcements.save():
-            response = 
+            pass
 
 
 
@@ -47,55 +48,31 @@ def new_announcement():
 @dashboard_api_blueprint.route('/edit', methods=['POST'])
 @jwt_required
 def edit_existing_post():
-    post_id = request.json.get("post_id")
-    updated_title = request.json.get("title")
-    updated_post = request.json.get("post")
-    post_to_edit = Announcement.get_by_id(Announcement.id == post_id)
-    post_to_edit.title = updated_title
-    post_to_edit.post = updated_post
+    user = get_jwt_identity()
+    if user.roles == 'staff':
+        post_id = request.json.get("post_id")
+        updated_title = request.json.get("title")
+        updated_post = request.json.get("post")
+        post_to_edit = Announcement.get_by_id(Announcement.id == post_id)
+        post_to_edit.title = updated_title
+        post_to_edit.post = updated_post
 
-    if post_to_edit.save():
-        result = []
-        for announcement in Announcement.select():
-            result.append({
-                "post_id": announcement.id,
-                "name": announcement.full.name,
-                "title": announcement.title,
-                "post": announcement.post
-            })
-        return jsonify(result)
-    else:
-        return jsonify({"error":"Edit failed, please try again"})
+        if post_to_edit.save():
+            result = []
+            for announcement in Announcement.select():
+                result.append({
+                    "post_id": announcement.id,
+                    "name": announcement.full.name,
+                    "title": announcement.title,
+                    "post": announcement.post
+                })
+            return jsonify(result)
+        else:
+            return jsonify({"error":"Edit failed, please try again"})
 
 
 
 @dashboard_api_blueprint.route('/delete', methods=['DELETE'])
 @jwt_required
 def delete_announcement():
-
-    
-
-# @dashboard_blueprint.route('/', methods=["POST"])
-# # @login_required
-# def create():
-#     # params = request.form
-#     print(params.get("staff"))
-#     new_announcement = Announcement(staff=params.get("staff"), post=params.get("post"))
-#     if new_announcement.save():
-#         response = {
-#             "message": "Sucessfully added new announcement"
-#             "status": "success"
-#         }
-#         return jsonify(response)
-#     else:
-#         response = {
-#             "message": "Something happened"
-#             "status": "fail"
-#         }
-#         return jsonify(response)
-
-# request.json = {
-#     # staff_id: 1,
-#     post: "bomba  coming"
-# }
-
+    pass
